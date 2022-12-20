@@ -9,14 +9,12 @@ var svg = d3.select("#my_dataviz")
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
-
-var upperRange = 2021
-
+            
 var x = d3.scaleLinear()
   .domain([1960, 2020])
   .range([ 0, width ])
-
-svg.append("g")
+  
+  svg.append("g")
   .attr("transform", "translate(0," + height + ")")
   .call(d3.axisBottom(x).tickFormat(x => x));
 
@@ -37,21 +35,31 @@ var line = svg.append("path")
     .y(function(d) { return y(d.y) })
     )
 
+var upperRange = 2020
+var countryIndex = 0
+var csvData = null
+
+function createSelect() {
+
+  for (d in csvData) {
+    let selectList = document.getElementById("countries")
+    let option = document.createElement("option");
+    option.value = d;
+    option.text = csvData[d]['Country Name'];
+    selectList.appendChild(option);
+  }
+
+}
+
 function buildChart() {
 
-  d3.csv("http://127.0.0.1:5500/data/life_expectancy_male.csv",
-
-  function(data) {
-
-    unitedStates = data[251]
+    unitedStates = csvData[countryIndex]
 
     let lineData = []
 
     for (let i  = 1960; i <= upperRange; i++) {
       lineData.push({x: i, y: +unitedStates[i]})
     }
-
-    console.log(lineData)
 
     // update the line
     line.datum(lineData)
@@ -62,11 +70,44 @@ function buildChart() {
         .x(function(d) { return x(d.x) })
         .y(function(d) { return y(d.y) })
         )
-  })
 }
+
+d3.csv("http://127.0.0.1:5500/data/life_expectancy_male.csv",
+
+  function(data) {
+
+    csvData = data
+
+    unitedStates = data[countryIndex]
+
+    let lineData = []
+
+    for (let i  = 1960; i <= upperRange; i++) {
+      lineData.push({x: i, y: +unitedStates[i]})
+    }
+
+    buildChart()
+    createSelect()
+})
 
 document.getElementById("myRange").addEventListener("input", function() {
   upperRange = this.value
   document.getElementById("year").innerText = this.value;
   buildChart()
+});
+
+document.getElementById("countries").addEventListener("change", function() {
+  countryIndex = this.value;
+  document.getElementById("title").innerText = csvData[this.value]['Country Name'];
+  buildChart()
+});
+
+document.getElementById("animationBtn").addEventListener("click", function() {
+  upperRange = 1960
+  let interval = setInterval(() => {
+    buildChart()
+    
+    upperRange++
+    if (upperRange == 2020) clearInterval(interval)
+  }, 100)
 });

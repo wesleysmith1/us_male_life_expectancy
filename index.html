@@ -1,17 +1,22 @@
 <!doctype html>
 <html>
 <head>
-<title>Our Funky HTML Page</title>
+<title>Male Life Expectancy</title>
 <meta name="description" content="Our first page">
 <meta name="keywords" content="html tutorial template">
 <script src="https://d3js.org/d3.v4.js"></script>
 </head>
 <body>
+    <h3>
+        Male Life Expectancy <span id="title">Aruba</span>
+    </h3>
     <div id="my_dataviz"></div>
     <div class="slidecontainer">
-        <input type="range" min="1960" max="2020" value="2000" class="slider" id="myRange">
-        <span id="year"></span>
+        <input type="range" min="1960" max="2020" value="1960" class="slider" id="myRange">
+        <span id="year">1960</span>
     </div>
+    <select name="countries" id="countries"></select>
+    <button id="animationBtn">Start animation</button>
     <script src="js/scripts.js"></script>
 </body>
 </html>
