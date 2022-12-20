@@ -106,8 +106,8 @@ document.getElementById("animationBtn").addEventListener("click", function() {
   upperRange = 1960
   let interval = setInterval(() => {
     buildChart()
-    
+
     upperRange++
-    if (upperRange == 2020) clearInterval(interval)
+    if (upperRange >= 2021) clearInterval(interval)
   }, 100)
 });
